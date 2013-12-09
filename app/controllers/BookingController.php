@@ -35,9 +35,15 @@ class BookingController extends \BaseController {
 			return Response::make('Booking not found', 404);
 		}
 
-		$booking->update(Input::all());
-
-		return Booking::with(array('user', 'room'))->find(Input::get('id'));
+		try
+		{
+			$booking->update(Input::all());
+			return Booking::with(array('user', 'room'))->find(Input::get('id'));
+		}
+		catch (\Exception $e)
+		{
+			return Response::make('Invalid data', 400);
+		}
 	}
 
 	public function destroy()
