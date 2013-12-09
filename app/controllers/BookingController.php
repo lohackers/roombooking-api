@@ -11,8 +11,18 @@ class BookingController extends \BaseController {
 	// POST: create a new booking
 	public function create()
 	{
-		$booking = Booking::create(Input::all());
-		return $booking;
+		$booking = new Booking(Input::all());
+
+		// Try to save booking
+		try
+		{
+			$booking->save();
+			return $booking;
+		}
+		catch (\Exception $e)
+		{
+			return Response::make('Invalid input data', 400);
+		}
 	}
 
 	// PUT: update an existing booking
