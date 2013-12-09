@@ -2,6 +2,26 @@
 
 class BookingTest extends TestCase {
 
+	/**
+	* NOTE: you MUST first create the test database and create the migrations
+	* table with
+	* php artisan migrate:install --env=testing
+	* before you can run tests!
+	*/
+
+	public function setUp()
+	{
+		parent::setUp();
+		Artisan::call('migrate');
+		Artisan::call('db:seed');
+	}
+
+	public function tearDown()
+	{
+		parent::tearDown();
+		Artisan::call('migrate:reset');
+	}
+
 	public function testGetBookingsJSON()
 	{
 		$crawler = $this->client->request('GET', '/bookings', array(), array(), array('HTTP_ACCEPT' => 'application/json'));
