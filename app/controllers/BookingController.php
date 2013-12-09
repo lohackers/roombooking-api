@@ -5,7 +5,19 @@ class BookingController extends \BaseController {
 	// GET: list all bookings
 	public function index()
 	{
-		return Booking::with(array('user', 'room'))->get();
+		switch ( Request::format() )
+		{
+			case 'json':
+			return Booking::with(array('user', 'room'))->get();
+			break;
+
+			case 'html':
+			return View::make('bookings/index')->with(array('bookings' => Booking::with(array('user', 'room'))->get()));
+			break;
+
+			default:
+			return Response::make('Content type not acceptable', 406);
+		}
 	}
 
 	// POST: create a new booking
