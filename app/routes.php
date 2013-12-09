@@ -30,11 +30,6 @@ Route::filter('auth', function ()
 
 Route::get('/auth', array('as' => 'auth', 'uses' => 'AuthController@index'));
 
-Route::get('/', array('before' => 'auth', 'as' => 'home', function()
-{
-	return Session::get('user');
-}));
-
 // Booking resource, filter authentication
 Route::group(array('before' => 'auth'), function()
 {
