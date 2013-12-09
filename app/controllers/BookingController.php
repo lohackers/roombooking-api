@@ -9,27 +9,44 @@ class BookingController extends \BaseController {
 		{
 			case 'json':
 			return Booking::with(array('user', 'room'))->get();
-			break;
 
 			case 'html':
 			return View::make('bookings/index')->with(array('bookings' => Booking::with(array('user', 'room'))->get()));
-			break;
 
 			default:
 			return Response::make('Content type not acceptable', 406);
 		}
 	}
 
+	public function edit()
+	{
+		return View::make('bookings/edit')->with(array(
+			'rooms' => Room::lists('name', 'id'),
+			'users' => User::lists('email', 'id')
+		));
+	}
+
 	// POST: create a new booking
 	public function create()
 	{
-		$booking = new Booking(Input::all());
+		$booking = new Booking(Input::except('_token'));
 
 		// Try to save booking
 		try
 		{
 			$booking->save();
-			return $booking;
+
+			switch ( Request::format() )
+			{
+				case 'html':
+				return Redirect::route('all_bookings');
+
+				case 'json':
+				return $booking;
+
+				default:
+				return Response::make('Content type not acceptable', 406);
+			}
 		}
 		catch (\Exception $e)
 		{
@@ -71,7 +88,17 @@ class BookingController extends \BaseController {
 			$booking->delete();
 		}
 
-		return Response::make('Deleted', 200);
+		switch ( Request::format() )
+		{
+			case 'json':
+			return Response::make('Deleted', 200);
+
+			case 'html':
+			return Redirect::route('all_bookings');
+
+			default:
+			return Response::make('Content type not acceptable', 406);
+		}
 	}
 
 }

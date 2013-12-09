@@ -34,6 +34,7 @@ Route::get('/auth', array('as' => 'auth', 'uses' => 'AuthController@index'));
 Route::group(array('before' => 'auth'), function()
 {
 	Route::get('/bookings', array('as' => 'all_bookings', 'uses' => 'BookingController@index'));
+	Route::get('/bookings/edit', array('as' => 'edit_booking', 'uses' => 'BookingController@edit'));
 	Route::post('/bookings', array('as' => 'create_booking', 'uses' => 'BookingController@create'));
 	Route::put('/bookings', array('as' => 'update_booking', 'uses' => 'BookingController@update'));
 	Route::delete('/bookings', array('as' => 'delete_booking', 'uses' => 'BookingController@destroy'));
