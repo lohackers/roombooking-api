@@ -14,9 +14,17 @@
 // Authentication filter
 Route::filter('auth', function ()
 {
-	if ( ! Session::has('access_token') || ! Session::has('user') )
+	if ( ! Config::get('roombooking.auth_enabled') )
 	{
-		return Redirect::route('auth');
+		// skip authentication
+		return;
+	}
+	else
+	{
+		if ( ! Session::has('access_token') || ! Session::has('user') )
+		{
+			return Redirect::route('auth');
+		}
 	}
 });
 
