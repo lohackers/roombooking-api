@@ -38,4 +38,7 @@ Route::group(array('before' => 'auth'), function()
 	Route::post('/bookings', array('as' => 'create_booking', 'uses' => 'BookingController@create'));
 	Route::put('/bookings', array('as' => 'update_booking', 'uses' => 'BookingController@update'));
 	Route::delete('/bookings', array('as' => 'delete_booking', 'uses' => 'BookingController@destroy'));
+
+	// get bookings on a room
+	Route::get('/rooms/{id}/bookings', array('as' => 'all_room_bookings', 'uses' => 'RoomBookingController@index'))->where('id', '[0-9]+');
 });
