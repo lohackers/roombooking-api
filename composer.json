@@ -5,7 +5,7 @@
 	"license": "MIT",
 	"require": {
 		"laravel/framework": "4.0.*",
-		"madewithlove/laravel-oauth2": "0.3.*"
+		"madewithlove/laravel-oauth2": "0.3.6"
 	},
 	"autoload": {
 		"classmap": [
