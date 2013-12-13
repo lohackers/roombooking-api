@@ -28,17 +28,14 @@ Route::filter('auth', function ()
 	}
 });
 
-Route::get('/auth', array('as' => 'auth', 'uses' => 'AuthController@index'));
+Route::get('/auth', array('as' => 'auth.index', 'uses' => 'AuthController@index'));
 
 // Booking resource, filter authentication
 Route::group(array('before' => 'auth'), function()
 {
-	Route::get('/bookings', array('as' => 'all_bookings', 'uses' => 'BookingController@index'));
-	Route::get('/bookings/edit', array('as' => 'edit_booking', 'uses' => 'BookingController@edit'));
-	Route::post('/bookings', array('as' => 'create_booking', 'uses' => 'BookingController@create'));
-	Route::put('/bookings', array('as' => 'update_booking', 'uses' => 'BookingController@update'));
-	Route::delete('/bookings', array('as' => 'delete_booking', 'uses' => 'BookingController@destroy'));
+	// bookings full resource
+	Route::resource('bookings', 'BookingController');
 
 	// get bookings on a room
-	Route::get('/rooms/{id}/bookings', array('as' => 'all_room_bookings', 'uses' => 'RoomBookingController@index'))->where('id', '[0-9]+');
+	Route::get('/rooms/{id}/bookings', array('as' => 'roombooking.index', 'uses' => 'RoomBookingController@index'))->where('id', '[0-9]+');
 });

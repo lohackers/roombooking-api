@@ -18,16 +18,33 @@ class BookingController extends \BaseController {
 		}
 	}
 
-	public function edit()
+	// Create a new booking
+	public function create()
 	{
-		return View::make('bookings/edit')->with(array(
+		return View::make('bookings/create')->with(array(
+			'rooms' => Room::lists('name', 'id'),
+			'users' => User::lists('email', 'id')
+		));
+	}
+
+	public function edit($id)
+	{
+		$booking = Booking::find($id);
+
+		if ( ! $booking )
+		{
+			return Response::make('Booking not found', 404);
+		}
+
+		return View::make('bookings.edit')->with(array(
+			'booking' => $booking,
 			'rooms' => Room::lists('name', 'id'),
 			'users' => User::lists('email', 'id')
 		));
 	}
 
 	// POST: create a new booking
-	public function create()
+	public function store()
 	{
 		$booking = new Booking(Input::except('_token'));
 
@@ -39,7 +56,7 @@ class BookingController extends \BaseController {
 			switch ( Request::format() )
 			{
 				case 'html':
-				return Redirect::route('all_bookings');
+				return Redirect::route('bookings.index');
 
 				case 'json':
 				return $booking;
@@ -55,9 +72,9 @@ class BookingController extends \BaseController {
 	}
 
 	// PUT: update an existing booking
-	public function update()
+	public function update($id)
 	{
-		$booking = Booking::find(Input::get('id'));
+		$booking = Booking::find($id);
 
 		if ( ! $booking )
 		{
@@ -66,8 +83,8 @@ class BookingController extends \BaseController {
 
 		try
 		{
-			$booking->update(Input::all());
-			return Booking::with(array('user', 'room'))->find(Input::get('id'));
+			$booking->update(Input::except(array('_method', '_token')));
+			return Redirect::route('bookings.edit', $id);
 		}
 		catch (\Exception $e)
 		{
@@ -75,9 +92,9 @@ class BookingController extends \BaseController {
 		}
 	}
 
-	public function destroy()
+	public function destroy($id)
 	{
-		$booking = Booking::find(Input::get('id'));
+		$booking = Booking::find($id);
 
 		if ( ! $booking )
 		{
@@ -94,7 +111,7 @@ class BookingController extends \BaseController {
 			return Response::make('Deleted', 200);
 
 			case 'html':
-			return Redirect::route('all_bookings');
+			return Redirect::route('bookings.index');
 
 			default:
 			return Response::make('Content type not acceptable', 406);
